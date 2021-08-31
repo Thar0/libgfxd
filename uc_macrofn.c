@@ -2304,6 +2304,21 @@ UCFUNC int d_DPSetOtherMode(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
 	return 0;
 }
 
+#if defined(S2DEX_2)
+UCFUNC int d_SPSetStatus(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
+{
+	int index = getfield(hi, 8, 16);
+	int sid = getfield(hi, 16, 0);
+	int val = lo;
+	if (index != G_MW_GENSTAT)
+		return -1;
+	m->id = gfxd_SPSetStatus;
+	argu(m, 0, "sid", sid, gfxd_Word);
+	argu(m, 1, "val", val, gfxd_Word);
+	return 0;
+}
+#endif
+
 UCFUNC int d_MoveWd(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
 {
 #if defined(F3D_GBI) || defined(F3DEX_GBI)
@@ -2313,8 +2328,13 @@ UCFUNC int d_MoveWd(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
 	int index = getfield(hi, 8, 16);
 	int offset = getfield(hi, 16, 0);
 #endif
+#if defined(S2DEX_2)
+	if (index == G_MW_GENSTAT)
+		return d_SPSetStatus(m, hi, lo);
+#else
 	if (index == G_MW_FOG && offset == G_MWO_FOG)
 		return d_SPFogPosition(m, hi, lo);
+#endif
 #if !(defined(F3D_BETA) && (defined(F3D_GBI) || defined(F3DEX_GBI)))
 	else if (index == G_MW_PERSPNORM && offset == 0)
 		return d_SPPerspNormalize(m, hi, lo);
@@ -2537,6 +2557,187 @@ UCFUNC int d_Special1(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
 	m->id = gfxd_Special1;
 	argu(m, 0, "hi", getfield(hi, 24, 0), gfxd_Word);
 	argu(m, 1, "lo", lo, gfxd_Word);
+	return 0;
+}
+#endif
+
+#if defined(S2DEX_2)
+UCFUNC int d_SPBgRectCopy(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
+{
+	m->id = gfxd_SPBgRectCopy;
+	argu(m, 0, "bg", lo, gfxd_BgPtr);
+	return 0;
+}
+
+UCFUNC int d_SPBgRect1Cyc(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
+{
+	m->id = gfxd_SPBgRect1Cyc;
+	argu(m, 0, "bg", lo, gfxd_BgPtr);
+	return 0;
+}
+
+UCFUNC int d_SPObjRectangle(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
+{
+	m->id = gfxd_SPObjRectangle;
+	argu(m, 0, "sp", lo, gfxd_SpritePtr);
+	return 0;
+}
+
+UCFUNC int d_SPObjRectangleR(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
+{
+	m->id = gfxd_SPObjRectangleR;
+	argu(m, 0, "sp", lo, gfxd_SpritePtr);
+	return 0;
+}
+
+UCFUNC int d_SPObjSprite(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
+{
+	m->id = gfxd_SPObjSprite;
+	argu(m, 0, "sp", lo, gfxd_SpritePtr);
+	return 0;
+}
+
+UCFUNC int d_ObjMoveMem(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
+{
+	int index = getfield(hi, 16, 0);
+	int size = getfield(hi, 8, 16);
+	if (size == sizeof(uObjMtx) - 1 && index == 0)
+	{
+		m->id = gfxd_SPObjMatrix;
+		argu(m, 0, "mtx", lo, gfxd_ObjMtxptr);
+	}
+	else if (size == sizeof(uObjMtx) - 1 && index == 2)
+	{
+		m->id = gfxd_SPObjSubMatrix;
+		argu(m, 0, "mtx", lo, gfxd_ObjMtxptr);
+	}
+	else
+	{
+		m->id = gfxd_ObjMoveMem;
+		argu(m, 0, "size", size, gfxd_Size);
+		argi(m, 1, "index", index, gfxd_ObjMv);
+		argu(m, 2, "dram", lo, gfxd_Dram);
+	}
+	return 0;
+}
+
+UCFUNC int d_SPObjRenderMode(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
+{
+	m->id = gfxd_SPObjRenderMode;
+	argu(m, 0, "mode", lo, gfxd_ObjRm);
+	return 0;
+}
+
+UCFUNC int d_SPObjLoadTxtr(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
+{
+	if ((hi & ~0xFF000000) != 23)
+		return -1;
+	m->id = gfxd_SPObjLoadTxtr;
+	argu(m, 0, "tx", lo, gfxd_ObjTxtr);
+	return 0;
+}
+
+UCFUNC int d_SPObjLoadTxRect(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
+{
+	if ((hi & ~0xFF000000) != 47)
+		return -1;
+	m->id = gfxd_SPObjLoadTxRect;
+	argu(m, 0, "txsp", lo, gfxd_ObjTxSprite);
+	return 0;
+}
+
+UCFUNC int d_SPObjLoadTxRectR(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
+{
+	if ((hi & ~0xFF000000) != 47)
+		return -1;
+	m->id = gfxd_SPObjLoadTxRectR;
+	argu(m, 0, "txsp", lo, gfxd_ObjTxSprite);
+	return 0;
+}
+
+UCFUNC int d_SPObjLoadTxSprite(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
+{
+	if ((hi & ~0xFF000000) != 47)
+		return -1;
+	m->id = gfxd_SPObjLoadTxSprite;
+	argu(m, 0, "txsp", lo, gfxd_ObjTxSprite);
+	return 0;
+}
+
+UCFUNC int d_SelectDL(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
+{
+	int ldl_hi = getfield(hi, 16, 0);
+	int type = getfield(hi, 8, 16);
+
+	if (type != 0)
+		return -1;
+
+	m->id = gfxd_SelectDL;
+	argu(m, 0, "type", type, gfxd_Word);
+	argu(m, 1, "ldl_hi", ldl_hi, gfxd_Word);
+	argu(m, 2, "mask", lo, gfxd_Word);
+	return 0;
+}
+
+UCFUNC int d_DPHalf0(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
+{
+	m->id = gfxd_DPHalf0;
+	argu(m, 0, "hi", hi, gfxd_Word);
+	argu(m, 1, "lo", lo, gfxd_Word);
+	return 0;
+}
+
+UCFUNC int c_SPSelectDL(gfxd_macro_t *m, gfxd_macro_t *m_list, int n_macro)
+{
+	if (n_macro < 2)
+		return -1;
+	if (m_list[0].id != gfxd_DPHalf0)
+		return -1;
+	uint32_t half0_hi = argvu(&m_list[0], 0);
+	uint32_t half0_lo = argvu(&m_list[0], 1);
+	int ldl_lo = getfield(half0_hi, 16, 0);
+	int sid = getfield(half0_hi, 8, 16);
+	int flag = half0_lo;
+	if (m_list[1].id != gfxd_SelectDL)
+		return -1;
+	uint32_t type = argvu(&m_list[1], 0);
+	uint32_t ldl_hi = argvu(&m_list[1], 1);
+	uint32_t mask = argvu(&m_list[1], 2);
+	int ldl = (ldl_hi << 16) | ldl_lo;
+	if (sid % 4 != 0 && type != 0)
+		return -1;
+	m->id = gfxd_SPSelectDL;
+	argu(m, 0, "ldl", ldl, gfxd_Dl);
+	argu(m, 1, "sid", sid, gfxd_Word);
+	argu(m, 2, "flag", flag, gfxd_Word);
+	argu(m, 3, "mask", mask, gfxd_Word);
+	return 0;
+}
+
+UCFUNC int c_SPSelectBranchDL(gfxd_macro_t *m, gfxd_macro_t *m_list, int n_macro)
+{
+	if (n_macro < 2)
+		return -1;
+	if (m_list[0].id != gfxd_DPHalf0)
+		return -1;
+	uint32_t half0_hi = argvu(&m_list[0], 0);
+	uint32_t half0_lo = argvu(&m_list[0], 1);
+	int bdl_lo = getfield(half0_hi, 16, 0);
+	int sid = getfield(half0_hi, 8, 16);
+	int flag = half0_lo;
+	if (m_list[1].id != gfxd_SelectDL)
+		return -1;
+	uint32_t type = argvu(&m_list[1], 0);
+	uint32_t bdl_hi = argvu(&m_list[1], 1);
+	uint32_t mask = argvu(&m_list[1], 2);
+	int bdl = (bdl_hi << 16) | bdl_lo;
+	if (sid % 4 != 0 && type != 1)
+		return -1;
+	m->id = gfxd_SPSelectBranchDL;
+	argu(m, 0, "bdl", bdl, gfxd_Dl);
+	argu(m, 1, "sid", sid, gfxd_Word);
+	argu(m, 2, "flag", flag, gfxd_Word);
+	argu(m, 3, "mask", mask, gfxd_Word);
 	return 0;
 }
 #endif

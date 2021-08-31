@@ -5,6 +5,16 @@ static const gfxd_arg_type_t arg_tbl[] =
 		.fmt = gfxd_argfmt_u,
 		.fn = argfn_x32,
 	},
+    [gfxd_Half] =
+    {
+        .fmt = gfxd_argfmt_u,
+        .fn = argfn_x16,
+    },
+    [gfxd_Byte] =
+    {
+        .fmt = gfxd_argfmt_u,
+        .fn = argfn_x8,
+    },
 	[gfxd_Opcode] =
 	{
 		.fmt = gfxd_argfmt_i,
@@ -482,4 +492,41 @@ static const gfxd_arg_type_t arg_tbl[] =
 		.fmt = gfxd_argfmt_i,
 		.fn = argfn_i,
 	},
+#if defined(S2DEX_2)
+    [gfxd_SpritePtr] =
+    {
+        .fmt = gfxd_argfmt_u,
+        .fn = argfn_x32,
+    },
+    [gfxd_BgPtr] =
+    {
+        .fmt = gfxd_argfmt_u,
+        .fn = argfn_x32,
+    },
+    [gfxd_ObjMtxptr] =
+    {
+        .fmt = gfxd_argfmt_u,
+        .fn = argfn_x32,
+    },
+    [gfxd_ObjRm] =
+    {
+        .fmt = gfxd_argfmt_u,
+        .fn = argfn_objrm,
+    },
+	[gfxd_ObjMv] =
+	{
+		.fmt = gfxd_argfmt_i,
+		.fn = argfn_objmv,
+	},
+	[gfxd_ObjTxtr] =
+	{
+		.fmt = gfxd_argfmt_u,
+		.fn = argfn_x32,
+	},
+	[gfxd_ObjTxSprite] =
+	{
+		.fmt = gfxd_argfmt_u,
+		.fn = argfn_x32,
+	},
+#endif
 };

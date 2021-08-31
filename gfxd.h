@@ -11,6 +11,8 @@ extern "C"
 enum
 {
 	gfxd_Word,		/* generic word */
+	gfxd_Half,		/* generic half word */
+	gfxd_Byte,		/* generic byte */
 	gfxd_Opcode,		/* command opcode (G_*) */
 	gfxd_Coordi,		/* integer coordinate */
 	gfxd_Coordq,		/* fractional (q10.2) coordinate */
@@ -106,6 +108,14 @@ enum
 	gfxd_Mvo,		/* movemem offset */
 	gfxd_Dmem,		/* dmem address */
 	gfxd_Dmaflag,		/* dma io flag */
+    gfxd_SpritePtr,		/* uObjSprite pointer */
+	gfxd_BgPtr,		/* uObjBg pointer */
+	gfxd_ObjMtxptr,		/* uObjMtx pointer */
+	gfxd_ObjRm,		/* s2dex render mode value */
+	gfxd_ObjMv,		/* s2dex movemem index */
+	gfxd_ObjTxtr,		/* uObjTxtr pointer */
+	gfxd_ObjTxSprite,		/* uObjTxSprite pointer */
+	// gfxd_Sid,		/* s2dex status id */
 };
 
 enum
@@ -249,6 +259,24 @@ enum
 	gfxd_Special3,
 	gfxd_Special2,
 	gfxd_Special1,
+	gfxd_SPBgRectCopy,
+	gfxd_SPBgRect1Cyc,
+	gfxd_SPObjRectangle,
+	gfxd_SPObjRectangleR,
+	gfxd_SPObjSprite,
+	gfxd_SPObjMatrix,
+	gfxd_SPObjSubMatrix,
+	gfxd_ObjMoveMem,
+	gfxd_SPObjRenderMode,
+	gfxd_SPObjLoadTxtr,
+	gfxd_SPObjLoadTxRect,
+	gfxd_SPObjLoadTxRectR,
+	gfxd_SPObjLoadTxSprite,
+	gfxd_SelectDL,
+	gfxd_SPSelectDL,
+	gfxd_SPSelectBranchDL,
+	gfxd_DPHalf0,
+	gfxd_SPSetStatus,
 };
 
 enum
@@ -385,6 +413,7 @@ extern const gfxd_ucode_t gfxd_f3db;
 extern const gfxd_ucode_t gfxd_f3dex;
 extern const gfxd_ucode_t gfxd_f3dexb;
 extern const gfxd_ucode_t gfxd_f3dex2;
+extern const gfxd_ucode_t gfxd_s2dex2;
 
 #ifdef __cplusplus
 }

@@ -130,6 +130,7 @@ UCFUNC int argfn_opc(const gfxd_value_t *v)
 {
 	switch (v->i)
 	{
+#if !defined(S2DEX_2)
 		case G_SPNOOP:
 			return gfxd_puts("G_SPNOOP");
 		case G_MTX:
@@ -140,22 +141,24 @@ UCFUNC int argfn_opc(const gfxd_value_t *v)
 			return gfxd_puts("G_VTX");
 		case G_DL:
 			return gfxd_puts("G_DL");
+#endif
 		case G_RDPHALF_2:
 			return gfxd_puts("G_RDPHALF_2");
 		case G_RDPHALF_1:
 			return gfxd_puts("G_RDPHALF_1");
-#if defined(F3D_BETA) && (defined(F3D_GBI) || defined(F3DEX_GBI))
+#if !defined(S2DEX_2)
+# if defined(F3D_BETA) && (defined(F3D_GBI) || defined(F3DEX_GBI))
 		case G_PERSPNORM:
 			return gfxd_puts("G_PERSPNORM");
-#endif
+# endif
 		case G_LINE3D:
 			return gfxd_puts("G_LINE3D");
-#if defined(F3D_GBI) || defined(F3DEX_GBI)
+# if defined(F3D_GBI) || defined(F3DEX_GBI)
 		case G_CLEARGEOMETRYMODE:
 			return gfxd_puts("G_CLEARGEOMETRYMODE");
 		case G_SETGEOMETRYMODE:
 			return gfxd_puts("G_SETGEOMETRYMODE");
-#endif
+# endif
 		case G_ENDDL:
 			return gfxd_puts("G_ENDDL");
 		case G_SETOTHERMODE_L:
@@ -174,19 +177,22 @@ UCFUNC int argfn_opc(const gfxd_value_t *v)
 			return gfxd_puts("G_TRI1");
 		case G_NOOP:
 			return gfxd_puts("G_NOOP");
+#endif
 #if defined(F3DEX_GBI) || defined(F3DEX_GBI_2)
 		case G_LOAD_UCODE:
 			return gfxd_puts("G_LOAD_UCODE");
 		case G_BRANCH_Z:
+# if !defined(S2DEX_2)
 			return gfxd_puts("G_BRANCH_Z");
 		case G_TRI2:
 			return gfxd_puts("G_TRI2");
-# if !(defined(F3D_BETA) && defined(F3DEX_GBI))
+#  if !(defined(F3D_BETA) && defined(F3DEX_GBI))
 		case G_MODIFYVTX:
 			return gfxd_puts("G_MODIFYVTX");
+#  endif
 # endif
 #endif
-#if defined(F3DEX_GBI_2)
+#if !defined(S2DEX_2) && defined(F3DEX_GBI_2)
 		case G_QUAD:
 			return gfxd_puts("G_QUAD");
 		case G_SPECIAL_3:
@@ -1821,3 +1827,65 @@ UCFUNC int argfn_cr(const gfxd_value_t *v)
 			return gfxd_printf("%" PRIu32, v->u);
 	}
 }
+
+#if defined(S2DEX_2)
+UCFUNC int argfn_objrm(const gfxd_value_t *v)
+{
+	int n = 0;
+	uint32_t arg = v->u;
+	if (arg & G_OBJRM_NOTXCLAMP)
+		n += gfxd_puts("G_OBJRM_NOTXCLAMP");
+	if (arg & G_OBJRM_XLU)
+	{
+		if (n > 0)
+			n += gfxd_puts(" | ");
+		n += gfxd_puts("G_OBJRM_XLU");
+	}
+	if (arg & G_OBJRM_ANTIALIAS)
+	{
+		if (n > 0)
+			n += gfxd_puts(" | ");
+		n += gfxd_puts("G_OBJRM_ANTIALIAS");
+	}
+	if (arg & G_OBJRM_BILERP)
+	{
+		if (n > 0)
+			n += gfxd_puts(" | ");
+		n += gfxd_puts("G_OBJRM_BILERP");
+	}
+	if (arg & G_OBJRM_SHRINKSIZE_1)
+	{
+		if (n > 0)
+			n += gfxd_puts(" | ");
+		n += gfxd_puts("G_OBJRM_SHRINKSIZE_1");
+	}
+	if (arg & G_OBJRM_SHRINKSIZE_2)
+	{
+		if (n > 0)
+			n += gfxd_puts(" | ");
+		n += gfxd_puts("G_OBJRM_SHRINKSIZE_2");
+	}
+	if (arg & G_OBJRM_WIDEN)
+	{
+		if (n > 0)
+			n += gfxd_puts(" | ");
+		n += gfxd_puts("G_OBJRM_WIDEN");
+	}
+	arg = arg & ~(G_OBJRM_NOTXCLAMP | G_OBJRM_XLU | G_OBJRM_ANTIALIAS | 
+		G_OBJRM_BILERP | G_OBJRM_SHRINKSIZE_1 | G_OBJRM_SHRINKSIZE_2 | 
+		G_OBJRM_WIDEN);
+	if (arg)
+	{
+		if (n > 0)
+			n += gfxd_puts(" | ");
+		n += gfxd_printf("0x%08" PRIX32, arg);
+	}
+	return n;
+}
+
+UCFUNC int argfn_objmv(const gfxd_value_t *v)
+{
+	// TODO are there names these can be given?
+	return gfxd_printf("%" PRIX16, v->i);
+}
+#endif

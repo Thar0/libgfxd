@@ -643,6 +643,7 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 5,
 		.disas_fn = d_DPSetTileSize,
 	},
+#if !defined(S2DEX_2)
 	[gfxd_SP1Triangle] =
 	{
 		.prefix = NULL,
@@ -652,7 +653,7 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 4,
 		.disas_fn = d_SP1Triangle,
 	},
-#if defined(F3DEX_GBI) || defined(F3DEX_GBI_2)
+# if defined(F3DEX_GBI) || defined(F3DEX_GBI_2)
 	[gfxd_SP2Triangles] =
 	{
 		.prefix = NULL,
@@ -662,8 +663,8 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 8,
 		.disas_fn = d_SP2Triangles,
 	},
-#endif
-#if defined(F3DEX_GBI)
+# endif
+# if defined(F3DEX_GBI)
 	[gfxd_SP1Quadrangle] =
 	{
 		.prefix = NULL,
@@ -673,7 +674,7 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 5,
 		.alias = gfxd_SP2Triangles,
 	},
-#elif defined(F3DEX_GBI_2)
+# elif defined(F3DEX_GBI_2)
 	[gfxd_SP1Quadrangle] =
 	{
 		.prefix = NULL,
@@ -683,8 +684,8 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 5,
 		.disas_fn = d_SP1Quadrangle,
 	},
-#endif
-#if defined(F3DEX_GBI) || defined(F3DEX_GBI_2)
+# endif
+# if defined(F3DEX_GBI) || defined(F3DEX_GBI_2)
 	[gfxd_SPBranchLessZraw] =
 	{
 		.prefix = NULL,
@@ -694,6 +695,7 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 3,
 		.combine_fn = c_SPBranchLessZraw,
 	},
+# endif
 #endif
 	[gfxd_SPBranchList] =
 	{
@@ -713,6 +715,7 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 1,
 		.combine_fn = c_SPClipRatio,
 	},
+#if !defined(S2DEX_2)
 	[gfxd_SPCullDisplayList] =
 	{
 		.prefix = NULL,
@@ -722,6 +725,7 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 2,
 		.disas_fn = d_SPCullDisplayList,
 	},
+#endif
 	[gfxd_SPDisplayList] =
 	{
 		.prefix = NULL,
@@ -758,7 +762,8 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 2,
 		.alias = gfxd_MoveWd,
 	},
-#if defined(F3D_GBI) || defined(F3DEX_GBI)
+#if !defined(S2DEX_2)
+# if defined(F3D_GBI) || defined(F3DEX_GBI)
 	[gfxd_SPForceMatrix] =
 	{
 		.prefix = NULL,
@@ -796,7 +801,7 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.combine_fn = c_SPLoadGeometryMode,
 		.ext = 1,
 	},
-#elif defined(F3DEX_GBI_2)
+# elif defined(F3DEX_GBI_2)
 	[gfxd_SPForceMatrix] =
 	{
 		.prefix = NULL,
@@ -833,8 +838,8 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 1,
 		.alias = gfxd_SPGeometryMode,
 	},
-#endif
-#if defined(F3D_GBI) || defined(F3DEX_GBI)
+# endif
+# if defined(F3D_GBI) || defined(F3DEX_GBI)
 	[gfxd_SPInsertMatrix] =
 	{
 		.prefix = NULL,
@@ -844,7 +849,7 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 2,
 		.alias = gfxd_MoveWd,
 	},
-#endif
+# endif
 	[gfxd_SPLine3D] =
 	{
 		.prefix = NULL,
@@ -863,6 +868,7 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 4,
 		.disas_fn = d_SPLineW3D,
 	},
+#endif
 #if defined(F3DEX_GBI) || defined(F3DEX_GBI_2)
 	[gfxd_SPLoadUcode] =
 	{
@@ -874,6 +880,7 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.combine_fn = c_SPLoadUcode,
 	},
 #endif
+#if !defined(S2DEX_2)
 	[gfxd_SPLookAtX] =
 	{
 		.prefix = NULL,
@@ -910,7 +917,7 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 2,
 		.disas_fn = d_SPMatrix,
 	},
-#if defined(F3D_GBI) || (defined(F3D_BETA) && defined(F3DEX_GBI))
+# if defined(F3D_GBI) || (defined(F3D_BETA) && defined(F3DEX_GBI))
 	[gfxd_SPModifyVertex] =
 	{
 		.prefix = NULL,
@@ -920,7 +927,7 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 3,
 		.alias = gfxd_MoveWd,
 	},
-#elif defined(F3DEX_GBI) || defined(F3DEX_GBI_2)
+# elif defined(F3DEX_GBI) || defined(F3DEX_GBI_2)
 	[gfxd_SPModifyVertex] =
 	{
 		.prefix = NULL,
@@ -930,6 +937,7 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 3,
 		.disas_fn = d_SPModifyVertex,
 	},
+# endif
 #endif
 #if defined(F3D_BETA) && (defined(F3D_GBI) || defined(F3DEX_GBI))
 	[gfxd_SPPerspNormalize] =
@@ -952,7 +960,8 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.alias = gfxd_MoveWd,
 	},
 #endif
-#if defined(F3D_GBI) || defined(F3DEX_GBI)
+#if !defined(S2DEX_2)
+# if defined(F3D_GBI) || defined(F3DEX_GBI)
 	[gfxd_SPPopMatrix] =
 	{
 		.prefix = NULL,
@@ -962,7 +971,7 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 1,
 		.disas_fn = d_SPPopMatrix,
 	},
-#elif defined(F3DEX_GBI_2)
+# elif defined(F3DEX_GBI_2)
 	[gfxd_SPPopMatrix] =
 	{
 		.prefix = NULL,
@@ -981,6 +990,7 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 2,
 		.disas_fn = d_SPPopMatrixN,
 	},
+# endif
 #endif
 	[gfxd_SPSegment] =
 	{
@@ -991,6 +1001,7 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 2,
 		.alias = gfxd_MoveWd,
 	},
+#if !defined(S2DEX_2)
 	[gfxd_SPSetLights1] =
 	{
 		.prefix = NULL,
@@ -1090,6 +1101,7 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 5,
 		.disas_fn = d_SPTexture,
 	},
+#endif
 	[gfxd_SPTextureRectangle] =
 	{
 		.prefix = NULL,
@@ -1108,6 +1120,7 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 9,
 		.combine_fn = c_SPTextureRectangleFlip,
 	},
+#if !defined(S2DEX_2)
 	[gfxd_SPVertex] =
 	{
 		.prefix = NULL,
@@ -1126,6 +1139,7 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 1,
 		.alias = gfxd_MoveMem,
 	},
+#endif
 	[gfxd_DPLoadTLUTCmd] =
 	{
 		.prefix = NULL,
@@ -1144,7 +1158,7 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 3,
 		.combine_fn = c_DPLoadTLUT,
 	},
-#if defined(F3DEX_GBI) || defined(F3DEX_GBI_2)
+#if !defined(S2DEX_2) && (defined(F3DEX_GBI) || defined(F3DEX_GBI_2))
 	[gfxd_BranchZ] =
 	{
 		.prefix = NULL,
@@ -1204,7 +1218,7 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 5,
 		.disas_fn = d_DPLoadTile,
 	},
-#if defined(F3DEX_GBI_2)
+#if !defined(S2DEX_2) && defined(F3DEX_GBI_2)
 	[gfxd_SPGeometryMode] =
 	{
 		.prefix = NULL,
@@ -1262,7 +1276,8 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 3,
 		.disas_fn = d_MoveWd,
 	},
-#if defined(F3D_GBI) || defined(F3DEX_GBI)
+#if !defined(S2DEX_2)
+# if defined(F3D_GBI) || defined(F3DEX_GBI)
 	[gfxd_MoveMem] =
 	{
 		.prefix = NULL,
@@ -1273,7 +1288,7 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.disas_fn = d_MoveMem,
 		.ext = 1,
 	},
-#elif defined(F3DEX_GBI_2)
+# elif defined(F3DEX_GBI_2)
 	[gfxd_MoveMem] =
 	{
 		.prefix = NULL,
@@ -1284,8 +1299,8 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.disas_fn = d_MoveMem,
 		.ext = 1,
 	},
-#endif
-#if defined(F3DEX_GBI_2)
+# endif
+# if defined(F3DEX_GBI_2)
 	[gfxd_SPDma_io] =
 	{
 		.prefix = NULL,
@@ -1313,6 +1328,7 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 3,
 		.alias = gfxd_SPDma_io,
 	},
+# endif
 #endif
 #if defined(F3DEX_GBI) || defined(F3DEX_GBI_2)
 	[gfxd_LoadUcode] =
@@ -1334,6 +1350,7 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.combine_fn = c_SPLoadUcodeEx,
 	},
 #endif
+#if !defined(S2DEX_2)
 	[gfxd_TexRect] =
 	{
 		.prefix = NULL,
@@ -1354,6 +1371,7 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.disas_fn = d_TexRectFlip,
 		.ext = 1,
 	},
+#endif
 	[gfxd_SPNoOp] =
 	{
 		.prefix = NULL,
@@ -1363,7 +1381,7 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 0,
 		.disas_fn = d_SPNoOp,
 	},
-#if defined(F3DEX_GBI_2)
+#if !defined(S2DEX_2) && defined(F3DEX_GBI_2)
 	[gfxd_Special3] =
 	{
 		.prefix = NULL,
@@ -1393,6 +1411,137 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.n_arg = 2,
 		.disas_fn = d_Special1,
 		.ext = 1,
+	},
+#endif
+#if defined(S2DEX_2)
+    [gfxd_SPBgRectCopy] =
+    {
+        .prefix = NULL,
+        .suffix = "SPBgRectCopy",
+        .opcode = G_BG_COPY,
+        .n_gfx = 1,
+        .n_arg = 1,
+        .disas_fn = d_SPBgRectCopy,
+    },
+    [gfxd_SPBgRect1Cyc] =
+    {
+        .prefix = NULL,
+        .suffix = "SPBgRect1Cyc",
+        .opcode = G_BG_1CYC,
+        .n_gfx = 1,
+        .n_arg = 1,
+        .disas_fn = d_SPBgRect1Cyc,
+    },
+    [gfxd_SPObjRectangle] =
+    {
+        .prefix = NULL,
+        .suffix = "SPObjRectangle",
+        .opcode = G_OBJ_RECTANGLE,
+        .n_gfx = 1,
+        .n_arg = 1,
+        .disas_fn = d_SPObjRectangle,
+    },
+    [gfxd_SPObjRectangleR] =
+    {
+        .prefix = NULL,
+        .suffix = "SPObjRectangleR",
+        .opcode = G_OBJ_RECTANGLE_R,
+        .n_gfx = 1,
+        .n_arg = 1,
+        .disas_fn = d_SPObjRectangleR,
+    },
+    [gfxd_SPObjMatrix] =
+    {
+        .prefix = NULL,
+        .suffix = "SPObjMatrix",
+        .opcode = G_OBJ_MOVEMEM,
+        .n_gfx = 1,
+        .n_arg = 1,
+		.alias = gfxd_ObjMoveMem,
+    },
+    [gfxd_SPObjSubMatrix] =
+    {
+        .prefix = NULL,
+        .suffix = "SPObjSubMatrix",
+        .opcode = G_OBJ_MOVEMEM,
+        .n_gfx = 1,
+        .n_arg = 1,
+		.alias = gfxd_ObjMoveMem,
+    },
+	[gfxd_ObjMoveMem] =
+	{
+		.prefix = NULL,
+		.suffix = "ObjMoveMem",
+		.opcode = G_OBJ_MOVEMEM,
+		.n_gfx = 1,
+		.n_arg = 3,
+		.disas_fn = d_ObjMoveMem,
+		.ext = 1,
+	},
+    [gfxd_SPObjSprite] =
+    {
+        .prefix = NULL,
+        .suffix = "SPObjSprite",
+        .opcode = G_OBJ_SPRITE,
+        .n_gfx = 1,
+        .n_arg = 1,
+        .disas_fn = d_SPObjSprite,
+    },
+    [gfxd_SPObjRenderMode] =
+    {
+        .prefix = NULL,
+        .suffix = "SPObjRenderMode",
+        .opcode = G_OBJ_RENDERMODE,
+        .n_gfx = 1,
+        .n_arg = 1,
+        .disas_fn = d_SPObjRenderMode,
+    },
+    [gfxd_SelectDL] = 
+    {
+        .prefix = NULL,
+        .suffix = "SelectDL",
+        .opcode = G_SELECT_DL,
+		.n_gfx = 1,
+		.n_arg = 3,
+		.disas_fn = d_SelectDL,
+		.ext = 1,
+    },
+	[gfxd_SPSelectDL] =
+	{
+		.prefix = NULL,
+		.suffix = "SPSelectDL",
+		.opcode = G_RDPHALF_0,
+		.n_gfx = 2,
+		.n_arg = 4,
+		.combine_fn = c_SPSelectDL,
+	},
+    [gfxd_SPSelectBranchDL] =
+    {
+		.prefix = NULL,
+		.suffix = "SPSelectBranchDL",
+		.opcode = G_RDPHALF_0,
+		.n_gfx = 2,
+		.n_arg = 4,
+		.combine_fn = c_SPSelectBranchDL,
+    },
+	[gfxd_DPHalf0] =
+	{
+		.prefix = NULL,
+		.suffix = "DPHalf0",
+		.opcode = G_RDPHALF_0,
+		.n_gfx = 1,
+		.n_arg = 1,
+		.disas_fn = d_DPHalf0,
+		.ext = 1,
+	},
+	[gfxd_SPSetStatus] =
+	{
+		.prefix = NULL,
+		.suffix = "SPSetStatus",
+		.opcode = G_MOVEWORD,
+		.n_gfx = 1,
+		.n_arg = 2,
+		.alias = gfxd_MoveWd,
 	},
 #endif
 };
