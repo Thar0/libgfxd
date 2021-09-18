@@ -158,6 +158,7 @@ enum
 	gfxd_DPLoadBlock,
 	gfxd_DPNoOp,
 	gfxd_DPNoOpTag,
+	gfxd_DPNoOpTag3,
 	gfxd_DPPipelineMode,
 	gfxd_DPSetBlendColor,
 	gfxd_DPSetEnvColor,

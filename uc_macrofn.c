@@ -643,6 +643,24 @@ UCFUNC int d_DPNoOpTag(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
 	}
 }
 
+UCFUNC int d_DPNoOpTag3(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
+{
+	if (hi == 0 && lo == 0)
+		return d_DPNoOp(m, hi, lo);
+    else if (hi == 0)
+        return d_DPNoOpTag(m, hi, lo);
+	else
+	{
+        int type = getfield(hi, 8, 16);
+        int data1 = getfield(hi, 16, 0);
+		m->id = gfxd_DPNoOpTag3;
+		argu(m, 0, "type", type, gfxd_Byte);
+		argu(m, 1, "data", lo, gfxd_Tag);
+		argu(m, 2, "data1", data1, gfxd_Half);
+		return 0;
+	}
+}
+
 UCFUNC int d_DPPipelineMode(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
 {
 	m->id = gfxd_DPPipelineMode;

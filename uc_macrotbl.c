@@ -353,7 +353,16 @@ static const gfxd_macro_type_t macro_tbl[] =
 		.opcode = G_NOOP,
 		.n_gfx = 1,
 		.n_arg = 1,
-		.disas_fn = d_DPNoOpTag,
+		.alias = gfxd_DPNoOpTag3,
+	},
+	[gfxd_DPNoOpTag3] =
+	{
+		.prefix = NULL,
+		.suffix = "DPNoOpTag3",
+		.opcode = G_NOOP,
+		.n_gfx = 1,
+		.n_arg = 3,
+		.disas_fn = d_DPNoOpTag3,
 	},
 	[gfxd_DPPipelineMode] =
 	{
