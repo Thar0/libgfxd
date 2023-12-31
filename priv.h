@@ -70,6 +70,7 @@ struct gfxd_state
 	Gfx			gfx[9];
 	int			n_byte;
 	int			n_gfx;
+	int			cur_macro_num;
 	gfxd_macro_t		cur_macro;
 	gfxd_macro_t		macro[9];
 

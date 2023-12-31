@@ -792,7 +792,7 @@ int gfxd_macro_packets(void)
 
 const void *gfxd_macro_data(void)
 {
-	return state.gfx;
+	return &state.gfx[state.cur_macro_num];
 }
 
 int gfxd_macro_id(void)
@@ -910,11 +910,13 @@ int gfxd_foreach_pkt(int (*fn)(void))
 
 		/* set as current macro for the duration of the callback */
 		state.cur_macro = *m;
+		state.cur_macro_num = i;
 
 		ret = fn();
 		if (ret != 0)
 			break;
 	}
 	state.cur_macro = m_save; /* restore current macro */
+	state.cur_macro_num = 0;
 	return ret;
 }
