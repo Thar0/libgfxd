@@ -90,9 +90,14 @@
 # define G_TRI2			0x06
 # define G_QUAD			0x07
 # define G_LINE3D		0x08
+# if defined(F3DEX_GBI_3)
+# define G_RELSEGMENT		0x0B
+# define G_MEMSET		0xD5
+# else
 # define G_SPECIAL_3		0xD3
 # define G_SPECIAL_2		0xD4
 # define G_SPECIAL_1		0xD5
+# endif
 # define G_DMA_IO		0xD6
 # define G_TEXTURE		0xD7
 # define G_POPMTX		0xD8
@@ -239,7 +244,7 @@
 # define G_CULL_FRONT		(gI_(0b1) << 9)
 # define G_CULL_BACK		(gI_(0b1) << 10)
 # define G_SHADING_SMOOTH	(gI_(0b1) << 21)
-# if defined(F3DEX2_POS_LIGHTS)
+# if defined(F3DEX_GBI_PL)
 #  define G_LIGHTING_POSITIONAL	(gI_(0b1) << 22)
 # endif
 #endif
@@ -1174,7 +1179,6 @@
 #endif
 
 /* moveword indices */
-#define G_MW_MATRIX		0
 #define G_MW_NUMLIGHT		2
 #define G_MW_CLIP		4
 #define G_MW_SEGMENT		6
@@ -1185,12 +1189,18 @@
 
 /* moveword indices for fast3d and f3dex */
 #if defined(F3D_GBI) || defined(F3DEX_GBI)
+# define G_MW_MATRIX		0
 # define G_MW_POINTS		12
 #endif
 
 /* moveword indices for f3dex2 */
 #if defined(F3DEX_GBI_2)
+# define G_MW_MATRIX		0
 # define G_MW_FORCEMTX		12
+#endif
+
+#if defined(F3DEX_GBI_3)
+# define G_MW_FX		0
 #endif
 
 /* moveword offsets */
@@ -1273,6 +1283,24 @@
 # define G_MWO_bLIGHT_7		gI_(0x94)
 # define G_MWO_aLIGHT_8		gI_(0xA8)
 # define G_MWO_bLIGHT_8		gI_(0xAC)
+#endif
+
+/* moveword offsets for f3dex3 */
+#if defined(F3DEX_GBI_3)
+/* move word */
+
+/* move halfword */
+# define G_MWO_AO_AMBIENT		0x00
+# define G_MWO_AO_DIRECTIONAL		0x02
+# define G_MWO_AO_POINT			0x04
+# define G_MWO_PERSPNORM		0x06
+# define G_MWO_FRESNEL_SCALE		0x0C
+# define G_MWO_FRESNEL_OFFSET		0x0E
+# define G_MWO_ATTR_OFFSET_S		0x10
+# define G_MWO_ATTR_OFFSET_T		0x12
+# define G_MWO_ATTR_OFFSET_Z		0x14
+# define G_MWO_ALPHA_COMPARE_CULL	0x16
+# define G_MWO_NORMALS_MODE		0x18
 #endif
 
 /* movemem params for fast3d and f3dex */
@@ -3460,7 +3488,7 @@ typedef struct
 	char		pad3;
 } Light_t;
 
-#if defined(F3DEX_GBI_2) && defined(F3DEX2_POS_LIGHTS)
+#if defined(F3DEX_GBI_2) && defined(F3DEX_GBI_PL)
 typedef struct
 {
 	uint8_t		col[3];
@@ -3476,7 +3504,7 @@ typedef union
 {
 	_Alignas(8)
 	Light_t		l;
-#if defined(F3DEX_GBI_2) && defined(F3DEX2_POS_LIGHTS)
+#if defined(F3DEX_GBI_2) && defined(F3DEX_GBI_PL)
 	PosLight_t	p;
 #endif
 } Light;

@@ -195,12 +195,14 @@ UCFUNC int argfn_opc(const gfxd_value_t *v)
 #if !defined(S2DEX_2) && defined(F3DEX_GBI_2)
 		case G_QUAD:
 			return gfxd_puts("G_QUAD");
+# if !defined(F3DEX_GBI_3)
 		case G_SPECIAL_3:
 			return gfxd_puts("G_SPECIAL_3");
 		case G_SPECIAL_2:
 			return gfxd_puts("G_SPECIAL_2");
 		case G_SPECIAL_1:
 			return gfxd_puts("G_SPECIAL_1");
+# endif
 		case G_DMA_IO:
 			return gfxd_puts("G_DMA_IO");
 		case G_GEOMETRYMODE:
@@ -429,7 +431,7 @@ UCFUNC int argfn_gm(const gfxd_value_t *v)
 			n += gfxd_puts(" | ");
 		n += gfxd_puts("G_SHADING_SMOOTH");
 	}
-#if defined(F3DEX_GBI_2) && defined(F3DEX2_POS_LIGHTS)
+#if defined(F3DEX_GBI_2) && defined(F3DEX_GBI_PL)
 	if (arg & G_LIGHTING_POSITIONAL)
 	{
 		if (n > 0)

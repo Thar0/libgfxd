@@ -647,12 +647,12 @@ UCFUNC int d_DPNoOpTag3(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
 {
 	if (hi == 0 && lo == 0)
 		return d_DPNoOp(m, hi, lo);
-    else if (hi == 0)
-        return d_DPNoOpTag(m, hi, lo);
+	else if (hi == 0)
+		return d_DPNoOpTag(m, hi, lo);
 	else
 	{
-        int type = getfield(hi, 8, 16);
-        int data1 = getfield(hi, 16, 0);
+		int type = getfield(hi, 8, 16);
+		int data1 = getfield(hi, 16, 0);
 		m->id = gfxd_DPNoOpTag3;
 		argu(m, 0, "type", type, gfxd_Byte);
 		argu(m, 1, "data", lo, gfxd_Tag);
@@ -2337,38 +2337,150 @@ UCFUNC int d_SPSetStatus(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
 }
 #endif
 
-UCFUNC int d_MoveWd(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
+#if defined(F3DEX_GBI_3)
+UCFUNC int d_MoveWd_EX3(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
 {
-#if defined(F3D_GBI) || defined(F3DEX_GBI)
-	int index = getfield(hi, 8, 0);
-	int offset = getfield(hi, 16, 8);
-#elif defined(F3DEX_GBI_2)
+	int ret = 0;
 	int index = getfield(hi, 8, 16);
 	int offset = getfield(hi, 16, 0);
+
+	// printf("MW EX3 index=%d offset=%d data=%08X\n", index, offset, lo);
+
+#define G_MW_HALFWORD_FLAG 0x8000
+
+	if (offset & G_MW_HALFWORD_FLAG)
+	{
+		if ((offset & 0xFFF) != (offset & 0x7FFF) || (lo & 0xFFFF0000) != 0)
+		{
+			badarg(m, 1);
+			ret = -1;
+			goto bad_movehalfword;
+		}
+
+		lo &= 0xFFFF;
+		offset &= 0xFFF;
+
+		if (index == G_MW_FX && offset == G_MWO_PERSPNORM)
+			return d_SPPerspNormalize(m, hi, lo);
+
+		ret = -1;
+		goto bad_movehalfword;
+
+		// gsMoveHalfWd
+		switch (offset)
+		{
+			case G_MWO_AO_AMBIENT:
+				break;
+
+			case G_MWO_AO_DIRECTIONAL:
+				break;
+
+			case G_MWO_AO_POINT:
+				break;
+
+			case G_MWO_FRESNEL_SCALE:
+				break;
+
+			case G_MWO_FRESNEL_OFFSET:
+				break;
+
+			case G_MWO_ATTR_OFFSET_Z:
+				break;
+
+			case G_MWO_ALPHA_COMPARE_CULL:
+				break;
+
+			case G_MWO_NORMALS_MODE:
+				break;
+		}
+	}
+	else
+	{
+		// gsMoveWd
+
+		if ((offset & 0xFFF) != (offset & 0x7FFF))
+		{
+			// badarg
+			badarg(m, 1);
+			ret = -1;
+			goto bad_moveword;
+		}
+
+		offset &= 0xFFF;
+
+		if (index == G_MW_FOG && offset == G_MWO_FOG)
+			return d_SPFogPosition(m, hi, lo);
+
+		if (index == G_MW_SEGMENT)
+			return d_SPSegment(m, hi, lo);
+
+		ret = -1;
+		goto bad_moveword;
+	}
+	return ret;
+
+bad_movehalfword:
+	m->id = gfxd_MoveHalfWd;
+	argi(m, 0, "index", index, gfxd_Mw);
+	if (index == G_MW_CLIP)
+		argu(m, 1, "offset", offset, gfxd_Mwo_clip);
+	else if (index == G_MW_LIGHTCOL)
+		argu(m, 1, "offset", offset, gfxd_Mwo_lightcol);
+	else
+		argu(m, 1, "offset", offset, gfxd_Mwo);
+	argu(m, 2, "value", lo, gfxd_Word);
+	return ret;
+
+bad_moveword:
+
+	m->id = gfxd_MoveWd;
+	argi(m, 0, "index", index, gfxd_Mw);
+	if (index == G_MW_CLIP)
+		argu(m, 1, "offset", offset, gfxd_Mwo_clip);
+	else if (index == G_MW_LIGHTCOL)
+		argu(m, 1, "offset", offset, gfxd_Mwo_lightcol);
+	else
+		argu(m, 1, "offset", offset, gfxd_Mwo);
+	argu(m, 2, "value", lo, gfxd_Word);
+	return ret;
+}
 #endif
-#if defined(S2DEX_2)
+
+UCFUNC int d_MoveWd(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
+{
+#if defined(F3DEX_GBI_3)
+	return d_MoveWd_EX3(m, hi, lo);
+#else
+# if defined(F3D_GBI) || defined(F3DEX_GBI)
+	int index = getfield(hi, 8, 0);
+	int offset = getfield(hi, 16, 8);
+# elif defined(F3DEX_GBI_2)
+	int index = getfield(hi, 8, 16);
+	int offset = getfield(hi, 16, 0);
+# endif
+# if defined(S2DEX_2)
 	if (index == G_MW_GENSTAT)
 		return d_SPSetStatus(m, hi, lo);
-#else
+# else
 	if (index == G_MW_FOG && offset == G_MWO_FOG)
 		return d_SPFogPosition(m, hi, lo);
-#endif
-#if !(defined(F3D_BETA) && (defined(F3D_GBI) || defined(F3DEX_GBI)))
+# endif
+# if !(defined(F3D_BETA) && (defined(F3D_GBI) || defined(F3DEX_GBI)))
 	else if (index == G_MW_PERSPNORM && offset == 0)
 		return d_SPPerspNormalize(m, hi, lo);
-#endif
+# endif
 	else if (index == G_MW_SEGMENT)
 		return d_SPSegment(m, hi, lo);
 	else if (index == G_MW_NUMLIGHT && offset == G_MWO_NUMLIGHT)
 		return d_SPNumLights(m, hi, lo);
-#if defined(F3D_GBI) || (defined(F3D_BETA) && defined(F3DEX_GBI))
+# if defined(F3D_GBI) || (defined(F3D_BETA) && defined(F3DEX_GBI))
 	else if (index == G_MW_POINTS)
 		return d_SPModifyVertex(m, hi, lo);
-#endif
-#if defined(F3D_GBI) || defined(F3DEX_GBI)
+# endif
+# if defined(F3D_GBI) || defined(F3DEX_GBI)
 	else if (index == G_MW_MATRIX)
 		return d_SPInsertMatrix(m, hi, lo);
-#endif
+# endif
 	else
 	{
 		m->id = gfxd_MoveWd;
@@ -2384,6 +2496,7 @@ UCFUNC int d_MoveWd(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
 		argu(m, 2, "value", lo, gfxd_Word);
 	}
 	return 0;
+#endif
 }
 
 #if defined(F3D_GBI) || defined(F3DEX_GBI)
@@ -2757,5 +2870,61 @@ UCFUNC int c_SPSelectBranchDL(gfxd_macro_t *m, gfxd_macro_t *m_list, int n_macro
 	argu(m, 2, "flag", flag, gfxd_Word);
 	argu(m, 3, "mask", mask, gfxd_Word);
 	return 0;
+}
+#endif
+
+#if defined(F3DEX_GBI_3)
+UCFUNC int d_SPRelSegment(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
+{
+	m->id = gfxd_SPRelSegment;
+	int offset = getfield(hi, 16, 0);
+	argu(m, 0, "seg", offset / 4, gfxd_Seg);
+	argu(m, 1, "base", lo, gfxd_RelSegptr);
+	int ret = 0;
+	if (offset % 4 != 0)
+	{
+		badarg(m, 0);
+		ret = -1;
+	}
+	return ret;
+}
+
+UCFUNC int d_Memset(gfxd_macro_t *m, uint32_t hi, uint32_t lo)
+{
+	m->id = gfxd_Memset;
+	uint32_t size = getfield(hi, 24, 0);
+	int ret = 0;
+	if ((size & 0xFFFFF0) != size)
+	{
+		badarg(m, 1);
+		ret = -1;
+	}
+	argu(m, 0, "dram", lo, gfxd_Dram);
+	argu(m, 1, "size", size, gfxd_Size);
+	return ret;
+}
+
+UCFUNC int c_SPMemset(gfxd_macro_t *m, gfxd_macro_t *m_list, int n_macro)
+{
+	int ret = 0;
+	if (n_macro < 2)
+		return -1;
+	if (m_list[0].id != gfxd_DPHalf1)
+		return -1;
+	uint32_t value = argvu(&m_list[0], 0);
+	if ((value & 0xFFFF0000) != 0)
+	{
+		badarg(m, 1);
+		ret = -1;
+	}
+	if (m_list[1].id != gfxd_Memset)
+		return -1;
+	uint32_t dram = argvu(&m_list[1], 0);
+	uint32_t size = argvu(&m_list[1], 1);
+	m->id = gfxd_SPMemset;
+	argu(m, 0, "dram", dram, gfxd_Dram);
+	argu(m, 1, "value", value, gfxd_Half);
+	argu(m, 2, "size", size, gfxd_Size);
+	return ret;
 }
 #endif

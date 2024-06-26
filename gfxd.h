@@ -85,6 +85,7 @@ enum
 	gfxd_Wscale,		/* w-component scale (perspnorm) */
 	gfxd_Seg,		/* segment number */
 	gfxd_Segptr,		/* segment pointer */
+	gfxd_RelSegptr,		/* f3dex3: relative segment pointer */
 	gfxd_Lightsn,		/* dereferenced LightsM (0-7 or n) pointer */
 	gfxd_Numlights,		/* light count (NUMLIGHTS_*) */
 	gfxd_Lightnum,		/* light number (LIGHT_*) */
@@ -108,13 +109,13 @@ enum
 	gfxd_Mvo,		/* movemem offset */
 	gfxd_Dmem,		/* dmem address */
 	gfxd_Dmaflag,		/* dma io flag */
-    gfxd_SpritePtr,		/* uObjSprite pointer */
+	gfxd_SpritePtr,		/* uObjSprite pointer */
 	gfxd_BgPtr,		/* uObjBg pointer */
 	gfxd_ObjMtxptr,		/* uObjMtx pointer */
 	gfxd_ObjRm,		/* s2dex render mode value */
 	gfxd_ObjMv,		/* s2dex movemem index */
 	gfxd_ObjTxtr,		/* uObjTxtr pointer */
-	gfxd_ObjTxSprite,		/* uObjTxSprite pointer */
+	gfxd_ObjTxSprite,	/* uObjTxSprite pointer */
 	// gfxd_Sid,		/* s2dex status id */
 };
 
@@ -248,6 +249,7 @@ enum
 	gfxd_SPSetOtherModeHi,
 	gfxd_DPSetOtherMode,
 	gfxd_MoveWd,
+	gfxd_MoveHalfWd,
 	gfxd_MoveMem,
 	gfxd_SPDma_io,
 	gfxd_SPDmaRead,
@@ -278,6 +280,9 @@ enum
 	gfxd_SPSelectBranchDL,
 	gfxd_DPHalf0,
 	gfxd_SPSetStatus,
+	gfxd_SPRelSegment,
+	gfxd_Memset,
+	gfxd_SPMemset,
 };
 
 enum
@@ -414,6 +419,7 @@ extern const gfxd_ucode_t gfxd_f3db;
 extern const gfxd_ucode_t gfxd_f3dex;
 extern const gfxd_ucode_t gfxd_f3dexb;
 extern const gfxd_ucode_t gfxd_f3dex2;
+extern const gfxd_ucode_t gfxd_f3dex3;
 extern const gfxd_ucode_t gfxd_s2dex2;
 
 #ifdef __cplusplus
